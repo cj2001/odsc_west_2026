@@ -60,7 +60,8 @@ services:
           "PIPELINE": {
             "CONFIGPATH": "/etc/opt/senzing",
             "RESOURCEPATH": "/opt/senzing/er/resources",
-            "SUPPORTPATH": "/opt/senzing/data"
+            "SUPPORTPATH": "/opt/senzing/data",
+            "LICENSESTRINGBASE64": "${SENZING_LICENSE_BASE64}"
           },
           "SQL": {
             "CONNECTION": "postgresql://postgres:workshop@postgres:5432:erkg?sslmode=disable"
@@ -106,7 +107,8 @@ services:
           "PIPELINE": {
             "CONFIGPATH": "/etc/opt/senzing",
             "RESOURCEPATH": "/opt/senzing/er/resources",
-            "SUPPORTPATH": "/opt/senzing/data"
+            "SUPPORTPATH": "/opt/senzing/data",
+            "LICENSESTRINGBASE64": "${SENZING_LICENSE_BASE64}"
           },
           "SQL": {
             "CONNECTION": "postgresql://postgres:workshop@postgres:5432:erkg?sslmode=disable"

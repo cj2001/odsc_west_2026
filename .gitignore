@@ -242,3 +242,6 @@ docker/postgres/g2.dump
 odsc-west-2026-images*
 notebooks/__pycache__/
 notebooks/.ipynb_checkpoints/
+
+# Senzing mapping workspace (profiles, mapper artifacts, large JSONL output)
+.sz-workspace/
