@@ -216,3 +216,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+sz_workspace/db/
+sz_workspace/mapped/
+sz_workspace/srcjson/
+sz_workspace/*.tmp
+sz_workspace/log_*.txt
+sz_workspace/g2.lic_base64
+sz_workspace/env.sh
+sz_workspace/normalized/
+sz_workspace/__pycache__/
+sz_workspace/scripts/__pycache__/
+
+# --- credentials & licences (ODSC West 2026) ---
+.env
+.env.*
+!.env.example
+g2.lic_base64
+*.lic_base64
+*.lic
+work/engine_config.json
+
+# --- class container artifacts (too large / rebuildable) ---
+docker/postgres/g2.dump
+*.tar.gz
+odsc-west-2026-images*
+notebooks/__pycache__/
+notebooks/.ipynb_checkpoints/
