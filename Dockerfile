@@ -17,6 +17,7 @@ USER ${NB_UID}
 RUN pip install --no-cache-dir \
     senzing-grpc \
     psycopg2-binary \
+    placekey \
     lancedb \
     pandas \
     networkx \

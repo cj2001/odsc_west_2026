@@ -245,3 +245,6 @@ notebooks/.ipynb_checkpoints/
 
 # Senzing mapping workspace (profiles, mapper artifacts, large JSONL output)
 .sz-workspace/
+
+# Database dump baked into the pre-loaded Postgres image (132MB, built locally)
+db/erkg.dump
