@@ -21,7 +21,12 @@ services:
       - erkg-network
 
   postgres:
-    image: postgres:15
+    # The pre-loaded workshop database: 39,413 records already entity-resolved
+    # and geocoded. Attendees cannot build this themselves - a free Senzing
+    # licence caps loading at 500 records - but reading a resolved database is
+    # unlimited, so shipping it this way removes the licence from their setup.
+    # Built from docker/postgres/; restores itself on first boot.
+    image: ghcr.io/cj2001/erkg-db:west-2026
     container_name: erkg_postgres
     environment:
       POSTGRES_USER: postgres
@@ -62,9 +67,9 @@ services:
       -c default_statistics_target=100
       -c random_page_cost=1.1
 
-  senzing:
+  resolver:
     image: senzing/serve-grpc:latest
-    container_name: erkg_senzing
+    container_name: erkg_resolver
     ports:
       - "8261:8261"
     environment:
@@ -87,7 +92,37 @@ services:
     networks:
       - erkg-network
 
+  sandbox:
+    # An EMPTY Senzing repository for attendees to load their own records into.
+    #
+    # Deliberately gets NO licence, even when one is present in .env: the free
+    # 500-record limit is what attendees experience, so this must behave the
+    # same here as it does for them. A licence here would hide breakage.
+    image: senzing/serve-grpc:latest
+    container_name: erkg_sandbox
+    ports:
+      - "8262:8261"
+    environment:
+      SENZING_ENGINE_CONFIGURATION_JSON: >
+        {
+          "PIPELINE": {
+            "CONFIGPATH": "/etc/opt/senzing",
+            "RESOURCEPATH": "/opt/senzing/er/resources",
+            "SUPPORTPATH": "/opt/senzing/data"
+          },
+          "SQL": {
+            "CONNECTION": "postgresql://postgres:workshop@postgres:5432:sandbox?sslmode=disable"
+          }
+        }
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - erkg-network
+
   jupyter:
+    image: ghcr.io/cj2001/erkg-jupyter:west-2026
     build: .
     container_name: erkg_jupyter
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
@@ -106,8 +141,11 @@ services:
       CHOWN_HOME: "yes"
       CHOWN_HOME_OPTS: "-R"
       # Senzing connection info
-      SENZING_GRPC_HOST: senzing
+      SENZING_GRPC_HOST: resolver
       SENZING_GRPC_PORT: 8261
+      # the empty repository attendees can load into
+      SANDBOX_GRPC_HOST: sandbox
+      SANDBOX_GRPC_PORT: 8261
       # Database connection info
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
@@ -128,7 +166,8 @@ services:
           }
         }
     depends_on:
-      - senzing
+      - resolver
+      - sandbox
       - postgres
     restart: unless-stopped
     networks:

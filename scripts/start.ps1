@@ -103,7 +103,18 @@ foreach ($d in @("notebooks", "data")) {
 }
 Write-Host ""
 
-# --- 3. up ----------------------------------------------------------------
+# --- 3. pull published images ---------------------------------------------
+# Explicit, because `up -d` BUILDS a service that has a build: section when its
+# image is not present locally - which is exactly what we do not want attendees
+# doing. Pulling first means they get the published image and build nothing.
+Write-Host "Pulling published images..."
+Invoke-Compose @("pull")
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Could not pull. Continuing with whatever images are already local."
+}
+Write-Host ""
+
+# --- 4. up ----------------------------------------------------------------
 Write-Host "Starting containers..."
 Invoke-Compose @("up", "-d")
 if ($LASTEXITCODE -ne 0) {
@@ -125,7 +136,7 @@ Write-Host ""
 docker ps --filter name=erkg_ --format '  {{.Names}}`t{{.Status}}'
 Write-Host ""
 
-# --- 4. initialize the Senzing schema -------------------------------------
+# --- 5. initialize the Senzing schema -------------------------------------
 # Safe to run every time: it detects an already-initialized database and
 # returns without doing anything. Pass -NoInit to skip.
 if ($NoInit) {

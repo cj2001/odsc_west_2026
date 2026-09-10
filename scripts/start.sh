@@ -111,7 +111,17 @@ if [ -n "$NEEDS_FIX" ]; then
 fi
 echo ""
 
-# --- 3. up ----------------------------------------------------------------
+# --- 3. pull published images ---------------------------------------------
+# Explicit, because `up -d` BUILDS a service that has a build: section when its
+# image is not present locally - which is exactly what we do not want attendees
+# doing. Pulling first means they get the published image and build nothing.
+echo "Pulling published images..."
+if ! $DC pull; then
+    echo "⚠️  Could not pull. Continuing with whatever images are already local."
+fi
+echo ""
+
+# --- 4. up ----------------------------------------------------------------
 echo "Starting containers..."
 if ! $DC up -d; then
     echo ""
@@ -132,7 +142,7 @@ echo ""
 docker ps --filter name=erkg_ --format '  {{.Names}}\t{{.Status}}'
 echo ""
 
-# --- 4. initialize the Senzing schema -------------------------------------
+# --- 5. initialize the Senzing schema -------------------------------------
 # Safe to run every time: it detects an already-initialized database and
 # returns without doing anything. Pass --no-init to skip.
 if [ "$SKIP_INIT" = "1" ]; then
