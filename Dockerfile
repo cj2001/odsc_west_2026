@@ -15,21 +15,6 @@ RUN mkdir -p /workspace/notebooks /workspace/data /workspace/lancedb_data && \
 
 USER ${NB_UID}
 
-# CPU-only torch FIRST. sentence-transformers otherwise resolves the default
-# CUDA build and drags in nvidia (2.7G) + torch (1.2G) + triton (691M) - 4.6GB
-# of GPU libraries that nothing in this workshop can use, since everything runs
-# CPU-only in a container. Installing the CPU wheel up front means the later
-# install sees torch already satisfied.
-# --no-deps is essential: --index-url REPLACES PyPI for the whole resolution, so
-# without it torch's dependencies also come from the PyTorch mirror, where a
-# conflicting 'backports' clobbers the one setuptools needs. setuptools then
-# fails to import, and every later sdist build dies with a confusing
-# "setuptools is not available in the build environment". Taking torch alone
-# from that index and letting its dependencies resolve from PyPI avoids it.
-RUN pip install --no-cache-dir --no-deps \
-    --index-url https://download.pytorch.org/whl/cpu \
-    torch
-
 # 'ratelimit' is a placekey dependency published only as a legacy sdist with no
 # pyproject.toml, so pip falls back to setup.py - and pip's ISOLATED build env
 # has no setuptools, which fails the whole install. The ambient env does have
@@ -48,10 +33,46 @@ RUN pip install --no-cache-dir \
     pyvis \
     folium \
     python-dotenv \
-    sentence-transformers \
+    fastembed \
     dspy-ai \
     anthropic \
     openai
+
+# The anthropic and openai SDKs ship httpx2, whose BrotliDecoder calls
+# Decompressor.process(data, output_buffer_limit=...). That keyword only exists
+# in Brotli 1.2.0+; the base image pins 1.1.0, where process() is a C function
+# taking no kwargs. Every API call then dies with a TypeError wrapped in a
+# misleading APIConnectionError, which looks like a network fault but is not.
+RUN pip install --no-cache-dir --upgrade "Brotli>=1.2.0"
+
+# fastembed replaces sentence-transformers, which pulled in torch. The aarch64
+# torch wheel links against OpenBLAS expecting 'sbgemm_', which the conda
+# OpenBLAS in this base image does not export, so `import torch` died with
+# "undefined symbol: sbgemm_" on every arm64 (Apple Silicon) machine. fastembed
+# runs the same all-MiniLM-L6-v2 on onnxruntime at the same 384 dimensions, with
+# no torch at all - which also drops ~800MB from the pull.
+
+# A fixed, world-readable cache so the baked model is found at runtime. The
+# container runs as the attendee's own uid, which is not necessarily jovyan's,
+# so a cache under $HOME would silently miss and re-download.
+ENV FASTEMBED_CACHE_PATH=/opt/fastembed_cache
+
+USER root
+RUN mkdir -p /opt/fastembed_cache && chown ${NB_UID}:${NB_GID} /opt/fastembed_cache
+USER ${NB_UID}
+
+# Bake the model (~90MB). Without this the first embed call in a fresh container
+# downloads it with no progress output, which is indistinguishable from a hang -
+# and would have forty attendees downloading it at once over conference wifi.
+RUN python -c "from fastembed import TextEmbedding; \
+    TextEmbedding('sentence-transformers/all-MiniLM-L6-v2')"
+
+# Make the cache readable by any uid. This runs as root because chmod on a
+# directory requires owning it, and the container runs as the attendee's own
+# uid, which is neither root nor jovyan.
+USER root
+RUN chmod -R a+rX /opt/fastembed_cache
+USER ${NB_UID}
 
 # Set working directory
 WORKDIR /workspace
