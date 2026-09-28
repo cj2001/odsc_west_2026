@@ -248,3 +248,8 @@ notebooks/.ipynb_checkpoints/
 
 # Database dump baked into the pre-loaded Postgres image (132MB, built locally)
 db/erkg.dump
+
+# Database dump baked into the pre-loaded Postgres image (regenerated from the
+# live database; ships via GHCR, not git, so it never bloats clone size)
+docker/postgres/erkg.dump
+docker/postgres/sandbox.dump

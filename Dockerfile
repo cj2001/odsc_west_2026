@@ -46,6 +46,7 @@ RUN pip install --no-cache-dir \
     pandas \
     networkx \
     pyvis \
+    folium \
     python-dotenv \
     sentence-transformers \
     dspy-ai \
