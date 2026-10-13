@@ -203,38 +203,3 @@ Reclaim the disk once the workshop is over:
 docker compose down -v
 docker rmi ghcr.io/cj2001/erkg-jupyter:west-2026 ghcr.io/cj2001/erkg-db:west-2026 senzing/serve-grpc:latest
 ```
-
----
-
-## Presenter notes
-
-*Not part of the attendee setup — notes for running this live.*
-
-**Steps 2–4 are already done on your machine.** You have all three images and a
-working `.env`. Start at step 5. If you want to rehearse the attendee
-experience, do it in a fresh clone in another directory rather than resetting
-this one.
-
-**Run `./scripts/start.sh` anyway**, because it is what you are telling the room
-to run. On your machine it changes nothing: your uid is 1000, which is already
-the template default, and the database is already initialised so
-`init_database.sh` returns immediately. It is idempotent, so running it mid-talk
-is safe.
-
-**Your `.env` holds a real Senzing licence, commented out.** Leave it commented.
-With it active your resolver can load records that an attendee's cannot, so the
-sandbox exercise would behave differently for you than for the room.
-
-**If you need to reset the database live**, `docker compose down -v` followed by
-`./scripts/start.sh` restores it from the dump inside the image in a minute or
-two. No licence needed. You lose anything loaded into the sandbox.
-
-**Do not run `docker compose build`.** The jupyter service has both `image:` and
-`build:`, so building tags the result as `ghcr.io/cj2001/erkg-jupyter:west-2026`
-and overwrites your local copy of the published image. Use `docker build -t`
-with a different tag if you need to try a change.
-
-**Before the conference:** rebuild from the pinned base digest, run every
-notebook from a cold kernel, and re-verify the arm64 image. The package set is
-pip-pinned rather than conda-managed, so a dependency can shift under a rebuild
-— that is how pandas 3.0 broke `pd.read_sql` once already.

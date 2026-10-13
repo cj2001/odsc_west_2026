@@ -19,6 +19,10 @@ USER ${NB_UID}
 # which is why there is no build-essential in this image.
 RUN pip install --no-cache-dir --no-build-isolation ratelimit
 
+# ipywidgets is not in base-notebook (scipy-notebook had it). Without it,
+# anything using tqdm - fastembed's progress bar included - prints
+# "IProgress not found. Please update jupyter and ipywidgets" on import,
+# which looks like a broken install but is only a missing progress widget.
 # pandas is pinned below 3.0 deliberately. base-notebook ships no pandas, so pip
 # takes the newest major - and pandas 3.0 does not recognise SQLAlchemy 2.0 as a
 # connectable, so every pd.read_sql(..., engine) falls through to the SQLite path
@@ -35,10 +39,10 @@ RUN pip install --no-cache-dir \
     "pandas>=2,<3" \
     sqlalchemy \
     networkx \
-    pyvis \
     folium \
     python-dotenv \
     fastembed \
+    ipywidgets \
     anthropic \
     openai
 
