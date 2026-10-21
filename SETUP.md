@@ -57,7 +57,7 @@ again and Docker continues from where it stopped.
 Check all three arrived:
 
 ```
-docker image ls --filter reference=*erkg* --filter reference=*serve-grpc*
+docker image ls --filter "reference=*erkg*" --filter "reference=*serve-grpc*"
 ```
 
 ## 3. Clone the repository
