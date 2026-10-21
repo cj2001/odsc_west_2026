@@ -109,7 +109,12 @@ services:
     image: ghcr.io/cj2001/erkg-jupyter:west-2026
     build: .
     container_name: erkg_jupyter
-    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    # Starts as root ONLY so the image's start.sh can remap jovyan to the
+    # attendee's uid and chown the directories; it then drops privileges and
+    # runs jupyter as that user. Setting `user:` to a non-root uid instead
+    # stops start.sh doing any of that, and /home/jovyan stays owned by 1000 -
+    # so Jupyter crashes for every uid except 1000, which is every macOS user.
+    user: "root"
     ports:
       - "18888:8888"
     volumes:
@@ -124,6 +129,10 @@ services:
       NB_GID: "${HOST_GID:-1000}"
       CHOWN_HOME: "yes"
       CHOWN_HOME_OPTS: "-R"
+      # /workspace and the lancedb_data volume are baked as 1000:100, so they
+      # need remapping too or notebook 04 cannot write its vector table.
+      CHOWN_EXTRA: "/workspace"
+      CHOWN_EXTRA_OPTS: "-R"
       # Senzing connection info
       SENZING_GRPC_HOST: resolver
       SENZING_GRPC_PORT: 8261
@@ -156,9 +165,12 @@ services:
     restart: unless-stopped
     networks:
       - erkg-network
+    # Must go through start.sh: that is where NB_UID/CHOWN_HOME/CHOWN_EXTRA are
+    # handled. Calling jupyter directly skips all of it. No --allow-root needed,
+    # because start.sh has already stepped down to NB_UID by this point.
     command: >
-      bash -c "jupyter lab --ip=0.0.0.0 --port=8888 --no-browser 
-      --allow-root --NotebookApp.token='' --NotebookApp.password=''"
+      start.sh jupyter lab --ip=0.0.0.0 --port=8888 --no-browser
+      --IdentityProvider.token='' --ServerApp.password=''
 
 volumes:
   postgres_data:
