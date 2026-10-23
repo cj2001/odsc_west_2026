@@ -3,8 +3,7 @@
 Everything runs in Docker. You do not need Python, PostgreSQL, or a Senzing
 licence on your machine — only Docker and a text editor.
 
-**Do the download step before the workshop, on a network you trust. Not on
-conference wifi.** It is about 2.5 GB.
+This container is about 2.5 GB.
 
 ---
 
@@ -19,7 +18,7 @@ conference wifi.** It is about 2.5 GB.
 
 ---
 
-## 1. Install Docker
+## 1. Install Docker (if you don't already have it)
 
 **macOS / Windows** — install [Docker Desktop](https://www.docker.com/products/docker-desktop/),
 launch it, and wait for the whale icon to stop animating.
@@ -41,7 +40,7 @@ docker run --rm hello-world
 
 ## 2. Download the images — do this early
 
-One line. No clone needed, nothing to configure. Works the same on Mac, PC and
+The following works the same on Mac, PC and
 Linux, and Docker picks the right build for your processor automatically:
 
 ```
@@ -87,7 +86,7 @@ OPENAI_API_KEY=sk-...
 
 Leave everything else alone. The other keys are optional and only needed if you
 want to rebuild the workshop data yourself later. `.env` is git-ignored, so your
-key stays on your machine.
+key stays on your machine.  If you have both keys, you can set `LLM_PROVIDER` to `anthropic` or `openai` to choose which one the notebooks use.
 
 > `.env` must exist before you start the stack — Docker Compose reads it and
 > will refuse to start without it. Copying the template is enough; the keys can
@@ -122,7 +121,7 @@ Open JupyterLab: http://localhost:18888
 
 ## 6. Verify
 
-Open <http://localhost:18888> — no password or token — and run
+Open <http://localhost:18888> and run
 **`notebooks/00_test_setup.ipynb`** top to bottom. Every cell should print ✅.
 
 That notebook checks the database connection, the resolver connection, and the
