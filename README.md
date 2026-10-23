@@ -59,6 +59,8 @@ Note that the full statewide source files are not in this repository. `data/filt
 
 - **[scripts/init_database.sh](scripts/init_database.sh)** and **[scripts/init_database.ps1](scripts/init_database.ps1)**: Initialize the Senzing schema if it is not already there. Safe to re-run; detects an initialized database and returns.
 
+- **[slides.pdf](slides.pdf)**: Self explanatory. 😄
+
 ### Notebooks
 
 Run these in order. Notebook `01` is optional and is the only one that needs a Senzing license.
