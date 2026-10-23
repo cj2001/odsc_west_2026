@@ -23,7 +23,7 @@ pg_restore \
 
 # The sandbox: a second database holding an empty Senzing repository, so
 # attendees can register a data source and load their own records under the
-# free 500-record licence. Kept separate from the main database on purpose -
+# free 500-record license. Kept separate from the main database on purpose -
 # that one is already far past the free limit and is read-only for them.
 echo "Creating the empty sandbox repository..."
 psql --username "${POSTGRES_USER}" --dbname "${POSTGRES_DB}" \
