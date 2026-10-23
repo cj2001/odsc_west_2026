@@ -1,4 +1,4 @@
-# ODSC West 2026 Workshop: Geo-Enabled Entity Resolved Knowledge Graphs for GraphRAG
+# ODSC West 2026 Workshop: Go on a Scavenger Hunt with a Geo-Enabled, Entity-Resolved Knowledge Graph
 ### Clair J. Sullivan, PhD
 ### clair@clairsullivan.com
 #### Last modified: October 23, 2026
