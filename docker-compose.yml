@@ -7,8 +7,8 @@ services:
   postgres:
     # The pre-loaded workshop database: 39,413 records already entity-resolved
     # and geocoded. Attendees cannot build this themselves - a free Senzing
-    # licence caps loading at 500 records - but reading a resolved database is
-    # unlimited, so shipping it this way removes the licence from their setup.
+    # license caps loading at 500 records - but reading a resolved database is
+    # unlimited, so shipping it this way removes the license from their setup.
     # Built from docker/postgres/; restores itself on first boot.
     image: ghcr.io/cj2001/erkg-db:west-2026
     container_name: erkg_postgres
@@ -79,9 +79,9 @@ services:
   sandbox:
     # An EMPTY Senzing repository for attendees to load their own records into.
     #
-    # Deliberately gets NO licence, even when one is present in .env: the free
+    # Deliberately gets NO license, even when one is present in .env: the free
     # 500-record limit is what attendees experience, so this must behave the
-    # same here as it does for them. A licence here would hide breakage.
+    # same here as it does for them. A license here would hide breakage.
     image: senzing/serve-grpc:latest
     container_name: erkg_sandbox
     ports:

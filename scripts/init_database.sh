@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Project root, so the licence and network are found no matter where this is
+# Project root, so the license and network are found no matter where this is
 # run from (cwd is NOT used - running from scripts/ used to guess wrong)
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PROJECT_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -27,9 +27,9 @@ echo "Network: $NETWORK_NAME"
 echo ""
 
 # ---------------------------------------------------------------------------
-# Senzing licence
+# Senzing license
 #
-# Without a licence Senzing accepts 500 records. The licence is a base64 string
+# Without a license Senzing accepts 500 records. The license is a base64 string
 # that goes into the engine configuration as PIPELINE.LICENSESTRINGBASE64. It
 # may be wrapped across several lines in the file; the engine wants one line, so
 # all whitespace is stripped below.
@@ -66,21 +66,21 @@ fi
 
 if [ -n "$LICENSE_B64" ]; then
     if ! printf '%s' "$LICENSE_B64" | base64 -d >/dev/null 2>&1; then
-        echo "❌ Error: licence from $LICENSE_SOURCE is not valid base64!"
+        echo "❌ Error: license from $LICENSE_SOURCE is not valid base64!"
         echo ""
-        echo "Expected the base64 licence string Senzing ships (g2.lic_base64),"
+        echo "Expected the base64 license string Senzing ships (g2.lic_base64),"
         echo "not the binary g2.lic file."
         echo ""
         exit 1
     fi
-    echo "🔑 Licence: $LICENSE_SOURCE (${#LICENSE_B64} base64 chars)"
+    echo "🔑 License: $LICENSE_SOURCE (${#LICENSE_B64} base64 chars)"
 else
-    echo "🔑 Licence: none found (looked for $LICENSE_FILE)"
+    echo "🔑 License: none found (looked for $LICENSE_FILE)"
     echo "   Senzing will run with the default 500-record limit."
 fi
 echo ""
 
-# Build the engine configuration, adding the licence only when we have one.
+# Build the engine configuration, adding the license only when we have one.
 # Base64 needs no JSON escaping.
 PIPELINE_JSON='"CONFIGPATH":"/etc/opt/senzing","RESOURCEPATH":"/opt/senzing/er/resources","SUPPORTPATH":"/opt/senzing/data"'
 if [ -n "$LICENSE_B64" ]; then
@@ -88,7 +88,7 @@ if [ -n "$LICENSE_B64" ]; then
 fi
 SQL_JSON='"CONNECTION":"postgresql://postgres:workshop@postgres:5432:erkg?sslmode=disable"'
 
-# Exported rather than passed as --env KEY=VALUE so the licence stays out of
+# Exported rather than passed as --env KEY=VALUE so the license stays out of
 # the process list; `docker run --env KEY` pulls it from this environment.
 export SENZING_ENGINE_CONFIGURATION_JSON="{\"PIPELINE\":{${PIPELINE_JSON}},\"SQL\":{${SQL_JSON}}}"
 

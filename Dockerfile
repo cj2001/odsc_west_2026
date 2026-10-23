@@ -24,7 +24,7 @@ RUN pip install --no-cache-dir --no-build-isolation ratelimit
 # "IProgress not found. Please update jupyter and ipywidgets" on import,
 # which looks like a broken install but is only a missing progress widget.
 # pandas is pinned below 3.0 deliberately. base-notebook ships no pandas, so pip
-# takes the newest major - and pandas 3.0 does not recognise SQLAlchemy 2.0 as a
+# takes the newest major - and pandas 3.0 does not recognize SQLAlchemy 2.0 as a
 # connectable, so every pd.read_sql(..., engine) falls through to the SQLite path
 # and dies with "'Engine' object has no attribute 'cursor'". pandas 3 also turns
 # on copy-on-write and the new string dtype, neither of which these notebooks

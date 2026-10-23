@@ -227,7 +227,7 @@ sz_workspace/normalized/
 sz_workspace/__pycache__/
 sz_workspace/scripts/__pycache__/
 
-# --- credentials & licences (ODSC West 2026) ---
+# --- credentials & licenses (ODSC West 2026) ---
 .env
 .env.*
 !.env.example
@@ -253,3 +253,17 @@ db/erkg.dump
 # live database; ships via GHCR, not git, so it never bloats clone size)
 docker/postgres/erkg.dump
 docker/postgres/sandbox.dump
+
+# Full statewide source files. The notebooks read data/filtered/ instead, so
+# these are kept locally for re-running the filtering step, not shipped.
+data/*.csv
+data/*.tsv
+data/old/
+
+# Local scratch, never shipped
+.orig_env
+error.txt
+docker-compose.slim.yml
+
+# Old working material, never shipped
+OLD/

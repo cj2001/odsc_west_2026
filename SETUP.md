@@ -1,7 +1,7 @@
 # Workshop Setup
 
 Everything runs in Docker. You do not need Python, PostgreSQL, or a Senzing
-licence on your machine — only Docker and a text editor.
+license on your machine — only Docker and a text editor.
 
 This container is about 2.5 GB.
 
@@ -12,9 +12,9 @@ This container is about 2.5 GB.
 - **Docker Desktop** (macOS / Windows) or **Docker Engine + Compose** (Linux)
 - **~10 GB free disk space**
 - **An LLM API key** — Anthropic or OpenAI — for the last two notebooks only
-- **No Senzing licence.** The workshop database arrives already loaded and
+- **No Senzing license.** The workshop database arrives already loaded and
   entity-resolved. Reading a resolved database is unlimited; only *loading* new
-  records needs a licence, and you will not be loading any.
+  records needs a license, and you will not be loading any.
 
 ---
 
@@ -140,7 +140,7 @@ Python packages. If it is all green, you are ready.
 
 The resolver and the sandbox share one image, so they are a single download.
 The sandbox is a second, empty Senzing repository — you can add records to it
-with a free licence and watch resolution happen, without touching the workshop
+with a free license and watch resolution happen, without touching the workshop
 database.
 
 Your `notebooks/` and `data/` folders are shared with the container, so edits
@@ -182,7 +182,7 @@ docker compose down
 
 > **Avoid `docker compose down -v` during the workshop.** The `-v` deletes the
 > volume holding the database. It is recoverable — the dump ships inside the
-> image, so the next `up` restores it automatically and needs no licence — but
+> image, so the next `up` restores it automatically and needs no license — but
 > the restore takes a minute or two, and anything you loaded into the sandbox
 > yourself is gone. Plain `down` stops the containers and keeps everything.
 
