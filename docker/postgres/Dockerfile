@@ -1,8 +1,8 @@
 # The pre-loaded workshop database.
 #
 # Attendees cannot build this database themselves: it holds 39,413 records and a
-# free Senzing licence caps loading at 500. Reading an already-resolved database
-# is unlimited, so shipping it this way removes the licence from their setup
+# free Senzing license caps loading at 500. Reading an already-resolved database
+# is unlimited, so shipping it this way removes the license from their setup
 # entirely.
 #
 # Stock Postgres runs anything in /docker-entrypoint-initdb.d exactly once, the
@@ -12,7 +12,7 @@ FROM postgres:15
 
 COPY erkg.dump /opt/erkg/erkg.dump
 
-# A second, EMPTY Senzing repository. The free 500-record licence counts records
+# A second, EMPTY Senzing repository. The free 500-record license counts records
 # already in the repository, so attendees cannot add even one record to the
 # 39,413-record main database. This gives them somewhere the load/resolve code
 # genuinely runs.

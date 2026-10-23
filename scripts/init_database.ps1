@@ -2,7 +2,7 @@
 #
 # Windows counterpart of init_database.sh - keep the two in sync.
 
-# Project root, so the licence and network are found no matter where this is
+# Project root, so the license and network are found no matter where this is
 # run from (the current directory is NOT used - running from scripts\ used to
 # guess the wrong network name)
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
@@ -32,9 +32,9 @@ Write-Host "Network: $NetworkName"
 Write-Host ""
 
 # ---------------------------------------------------------------------------
-# Senzing licence
+# Senzing license
 #
-# Without a licence Senzing accepts 500 records. The licence is a base64 string
+# Without a license Senzing accepts 500 records. The license is a base64 string
 # that goes into the engine configuration as PIPELINE.LICENSESTRINGBASE64. It
 # may be wrapped across several lines in the file; the engine wants one line, so
 # all whitespace is stripped below.
@@ -86,22 +86,22 @@ if (-not [string]::IsNullOrWhiteSpace($licenseB64)) {
     try {
         [void][Convert]::FromBase64String($licenseB64)
     } catch {
-        Write-Host "Error: licence from $licenseSource is not valid base64!" -ForegroundColor Red
+        Write-Host "Error: license from $licenseSource is not valid base64!" -ForegroundColor Red
         Write-Host ""
-        Write-Host "Expected the base64 licence string Senzing ships (g2.lic_base64),"
+        Write-Host "Expected the base64 license string Senzing ships (g2.lic_base64),"
         Write-Host "not the binary g2.lic file."
         Write-Host ""
         exit 1
     }
-    Write-Host "Licence: $licenseSource ($($licenseB64.Length) base64 chars)"
+    Write-Host "License: $licenseSource ($($licenseB64.Length) base64 chars)"
 } else {
     $licenseB64 = ""
-    Write-Host "Licence: none found (looked for $licenseFile)"
+    Write-Host "License: none found (looked for $licenseFile)"
     Write-Host "         Senzing will run with the default 500-record limit."
 }
 Write-Host ""
 
-# Build the engine configuration, adding the licence only when we have one.
+# Build the engine configuration, adding the license only when we have one.
 # Base64 needs no JSON escaping.
 $pipelineJson = '"CONFIGPATH":"/etc/opt/senzing","RESOURCEPATH":"/opt/senzing/er/resources","SUPPORTPATH":"/opt/senzing/data"'
 if (-not [string]::IsNullOrWhiteSpace($licenseB64)) {
@@ -110,7 +110,7 @@ if (-not [string]::IsNullOrWhiteSpace($licenseB64)) {
 $sqlJson = '"CONNECTION":"postgresql://postgres:workshop@postgres:5432:erkg?sslmode=disable"'
 
 # Set in this process's environment rather than passed as --env KEY=VALUE, so
-# the licence stays off the command line; `docker run --env KEY` picks it up.
+# the license stays off the command line; `docker run --env KEY` picks it up.
 $env:SENZING_ENGINE_CONFIGURATION_JSON = '{"PIPELINE":{' + $pipelineJson + '},"SQL":{' + $sqlJson + '}}'
 
 # Check if the network exists (after the fallback above, this is fatal)
