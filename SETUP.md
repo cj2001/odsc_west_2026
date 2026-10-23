@@ -68,7 +68,7 @@ cd odsc_west_2026
 ```
 
 `--depth 1` skips the project history and downloads about 10 MB instead of
-50 MB. You do not need the history for the workshop.
+55 MB. You do not need the history for the workshop.
 
 ## 4. Add your LLM key
 
