@@ -1,0 +1,10 @@
+The thing you need is:
+sk-
+ant-
+usr-
+1LLaBE7hU8MlPH-
+csNpvm6ZJHWlhBhgJXZfirxVFQszwjJmEpTWCnZ-
+8Eo2DkMCtdJmHs46bvlt-
+15wFfons6lQvX9d_gAA
+
+And combine it all as one string without any spaces or line breaks.
